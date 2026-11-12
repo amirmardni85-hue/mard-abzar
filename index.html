@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مرد ابزار | فروشگاه اینترنتی ابزارآلات</title>
+<style>
+:root{--red:#ef394e;--ink:#242424;--muted:#777;--line:#eee;--bg:#f5f5f5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif}
+header{background:#fff;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0000000c}
+.top{max-width:1180px;margin:auto;padding:15px 18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:900;color:var(--red);white-space:nowrap}.search{flex:1;min-width:190px;display:flex;background:#f1f2f4;border-radius:10px;padding:4px}
+.search input{border:0;outline:0;background:transparent;padding:10px;width:100%;font:inherit}
+button{font:inherit;cursor:pointer;border:0;border-radius:9px;padding:10px 14px}
+.search button,.primary{background:var(--red);color:#fff}
+.cart{background:#fff;border:1px solid var(--line);color:#333}
+nav{border-top:1px solid var(--line);padding:10px max(18px,calc((100% - 1144px)/2));display:flex;gap:20px;overflow:auto;white-space:nowrap;font-size:13px}
+nav a{color:#555;text-decoration:none}
+main{max-width:1180px;margin:22px auto;padding:0 18px}
+.hero{background:linear-gradient(110deg,#fff0f1,#fff);border:1px solid #ffe0e4;border-radius:16px;padding:28px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.hero h1{margin:0 0 10px;font-size:27px}.hero p{color:#666;margin:0}.hero strong{color:var(--red)}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:26px 0 14px}
+.section-head h2{font-size:20px;margin:0}.muted{color:var(--muted);font-size:12px}
+.categories{display:flex;gap:10px;overflow:auto;padding-bottom:5px}
+.cat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 18px;white-space:nowrap}
+.cat.active{border-color:var(--red);color:var(--red);background:#fff7f8}
+.products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px;min-width:0;display:flex;flex-direction:column}
+.pic{height:125px;border-radius:10px;background:#f7f7f7;display:grid;place-items:center;font-size:54px;margin-bottom:12px}
+.card h3{font-size:14px;line-height:1.8;margin:0 0 8px;min-height:48px}
+.price{font-weight:bold;margin:7px 0 12px}.price small{font-size:11px;font-weight:normal;color:#777}
+.card button{margin-top:auto}
+footer{margin-top:35px;background:#fff;border-top:1px solid var(--line);padding:25px 18px;text-align:center;color:#777;font-size:12px}
+.notice{background:#fff8e8;color:#805b12;padding:10px 13px;border-radius:9px;font-size:12px;margin-top:15px}
+#cartPanel{position:fixed;inset:0;background:#0006;display:none;z-index:10;justify-content:center;align-items:center;padding:16px}
+.panel{background:white;border-radius:14px;width:min(480px,100%);max-height:80vh;overflow:auto;padding:20px}
+.cart-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:10px 0;font-size:13px}
+@media(max-width:850px){.products{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.hero{padding:20px}.hero h1{font-size:21px}.pic{height:95px;font-size:43px}.card{padding:10px}.card h3{font-size:12px}.top{gap:10px}.logo{font-size:21px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="logo">مرد ابزار</div>
+    <div class="search"><input id="search" placeholder="جست‌وجوی ابزار، برند یا دسته‌بندی..." aria-label="جست‌وجو"><button onclick="render()">جست‌وجو</button></div>
+    <button class="cart" onclick="showCart()">🛒 سبد خرید <span id="count">۰</span></button>
+  </div>
+  <nav>
+    <a href="#cats">دسته‌بندی کالاها</a><a href="#products">همه محصولات</a><a href="#about">درباره ما</a><a href="#contact">تماس با ما</a>
+  </nav>
+</header>
+<main>
+  <section class="hero">
+    <div><h1>هر ابزاری که نیاز داری، <strong>اینجاست!</strong></h1><p>فروشگاه اینترنتی مرد ابزار؛ انتخاب آسان ابزارآلات</p></div>
+    <div style="font-size:54px" aria-hidden="true">🧰</div>
+  </section>
+  <div class="notice">توجه: این فروشگاه نسخه نمایشی رایگان است. قیمت‌ها و موجودی‌ها فرضی‌اند و پرداخت آنلاین هنوز فعال نیست.</div>
+  <section id="cats">
+    <div class="section-head"><h2>دسته‌بندی ابزارها</h2></div>
+    <div class="categories" id="categories"></div>
+  </section>
+  <section id="products">
+    <div class="section-head"><h2>محصولات پیشنهادی</h2><span class="muted" id="resultCount"></span></div>
+    <div class="products" id="productsGrid"></div>
+  </section>
+  <section id="about" class="section-head"><div><h2>درباره مرد ابزار</h2><p class="muted">یک فروشگاه نمونه برای معرفی و انتخاب انواع ابزارآلات.</p></div></section>
+  <section id="contact" class="notice">راه‌های تماس و ثبت سفارش واقعی را بعداً می‌توانیم با اطلاعات خودت اضافه کنیم.</section>
+</main>
+<footer>© مرد ابزار — تمامی حقوق محفوظ است.</footer>
+<div id="cartPanel" onclick="if(event.target===this)closeCart()">
+ <div class="panel"><div style="display:flex;justify-content:space-between;align-items:center"><h3>سبد خرید</h3><button onclick="closeCart()">✕</button></div><div id="cartItems"></div><p id="total" style="font-weight:bold"></p><button class="primary" onclick="alert('این نسخه نمایشی است؛ پرداخت آنلاین هنوز فعال نشده است.')">ادامه ثبت سفارش</button></div>
+</div>
+<script>
+const products=[
+ {id:1,name:"دریل برقی ۶۵۰ وات",cat:"ابزار برقی",price:1850000,icon:"🔩"},
+ {id:2,name:"مجموعه پیچ‌گوشتی ۳۲ عددی",cat:"ابزار دستی",price:420000,icon:"🪛"},
+ {id:3,name:"آچار فرانسه ۱۰ اینچ",cat:"ابزار دستی",price:390000,icon:"🔧"},
+ {id:4,name:"متر ۵ متری",cat:"اندازه‌گیری",price:160000,icon:"📏"},
+ {id:5,name:"مینی فرز ۷۵۰ وات",cat:"ابزار برقی",price:2100000,icon:"⚙️"},
+ {id:6,name:"دستکش ایمنی کار",cat:"ایمنی",price:95000,icon:"🧤"},
+ {id:7,name:"بیلچه باغبانی",cat:"باغبانی",price:130000,icon:"🪴"},
+ {id:8,name:"چکش دسته فایبرگلاس",cat:"ابزار دستی",price:280000,icon:"🔨"},
+ {id:9,name:"تراز دستی ۴۰ سانتی‌متر",cat:"اندازه‌گیری",price:310000,icon:"📐"},
+ {id:10,name:"عینک محافظ ایمنی",cat:"ایمنی",price:120000,icon:"🥽"},
+ {id:11,name:"اره باغبانی",cat:"باغبانی",price:350000,icon:"🪚"},
+ {id:12,name:"مجموعه مته فلز",cat:"ابزار برقی",price:240000,icon:"🧰"}
+];
+let category="همه",cart=[];
+const money=n=>n.toLocaleString("fa-IR")+" تومان";
+function renderCats(){
+ const cats=["همه",...new Set(products.map(p=>p.cat))];
+ document.getElementById("categories").innerHTML=cats.map(c=>`<button class="cat ${c===category?'active':''}" onclick="category='${c}';renderCats();render()">${c}</button>`).join("");
+}
+function render(){
+ const q=document.getElementById("search").value.trim().toLowerCase();
+ const list=products.filter(p=>(category==="همه"||p.cat===category)&&(p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)));
+ document.getElementById("resultCount").textContent=list.length.toLocaleString("fa-IR")+" کالا";
+ document.getElementById("productsGrid").innerHTML=list.map(p=>`<article class="card"><div class="pic">${p.icon}</div><h3>${p.name}</h3><div class="muted">${p.cat}</div><div class="price">${money(p.price)}</div><button class="primary" onclick="add(${p.id})">افزودن به سبد خرید</button></article>`).join("")||"<p>محصولی پیدا نشد.</p>";
+}
+function add(id){cart.push(id);document.getElementById("count").textContent=cart.length.toLocaleString("fa-IR")}
+function showCart(){
+ const grouped={};cart.forEach(id=>grouped[id]=(grouped[id]||0)+1);
+ document.getElementById("cartItems").innerHTML=Object.keys(grouped).map(id=>{const p=products.find(x=>x.id==id);return `<div class="cart-row"><span>${p.name} × ${grouped[id]}</span><b>${money(p.price*grouped[id])}</b></div>`}).join("")||"<p>سبد خرید خالی است.</p>";
+ document.getElementById("total").textContent="جمع کل: "+money(cart.reduce((s,id)=>s+products.find(p=>p.id===id).price,0));
+ document.getElementById("cartPanel").style.display="flex";
+}
+function closeCart(){document.getElementById("cartPanel").style.display="none"}
+document.getElementById("search").addEventListener("input",render);
+renderCats();render();
+</script>
+</body></html>
